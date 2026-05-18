@@ -69,12 +69,15 @@ xcopy /E /Y "db_movie的路徑" "C:\xampp\htdocs\db_movie\"
 
 ## 步驟五：匯入資料庫結構
 
+> **開始前：** 請確認已完成 PHP 檔案（`index.php`、`create.php`、`update.php`、`doupdate.php`、`delete.php`）中**所有 `TODO` 項目** — 先在每個檔案中填入你的資料庫帳密。
+
 1. 開啟 **MySQL Workbench**
-2. 點選「MySQL Connections」旁的 **+**，填入以下資訊：
+2. 點選「MySQL Connections」旁的 **+**，依據**「遠端Server各組帳密」**填入以下資訊：
    - **Connection Name：** 任意名稱（例如 `School`）
-   - **Hostname：** 遠端伺服器 IP
-   - **Username：** 你的帳號
-   - 點選 **Store in Vault** 輸入密碼
+   - **Hostname：** 本次作業提供的遠端伺服器 IP
+   - **Username：** 你的指定帳號
+   - 點選 **Store in Vault** 輸入你的指定密碼
+   > **請注意：此處連線的是本次作業指定的遠端伺服器，請勿使用 localhost。**
 3. 點選 **OK** 儲存，再點選該連線進入
 4. 點選 **File → Open SQL Script**，選擇 `db_data.sql` 並開啟
 5. **注意：** 執行前，請修改 SQL 檔案中標有 `TODO` 的三處：

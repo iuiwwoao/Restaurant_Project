@@ -64,12 +64,15 @@ Replace `path\to\db_movie` with the actual folder location (e.g. `d:\111\db_movi
 
 ## Step 5: Import the Database Schema
 
+> **Before you begin:** Make sure you have completed **all `TODO` items** in the PHP files (`index.php`, `create.php`, `update.php`, `doupdate.php`, `delete.php`) — fill in your database credentials in each file first.
+
 1. Open **MySQL Workbench**
-2. Click **+** next to "MySQL Connections" and fill in:
+2. Click **+** next to "MySQL Connections" and fill in the credentials from **「遠端Server各組帳密」**:
    - **Connection Name:** anything (e.g. `School`)
-   - **Hostname:** your remote server IP
-   - **Username:** your username
-   - Click **Store in Vault** and enter your password
+   - **Hostname:** the remote server IP provided for this homework
+   - **Username:** your assigned username
+   - Click **Store in Vault** and enter your assigned password
+   > **This connects to the remote server required for this homework — do not use localhost.**
 3. Click **OK**, then click the connection to open it
 4. Click **File → Open SQL Script**, select `db_data.sql`, and open it
 5. **Important:** Before running, update all three `TODO` lines in the SQL file:
