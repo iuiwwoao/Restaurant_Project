@@ -354,6 +354,75 @@ WHERE Customer_ID IN (
             </tbody>
         </table>
     </div>
+
+    <!-- Query 5: Customer Most Ordered Dish (Window Function & CTE) -->
+    <div class="report-section">
+        <div class="report-title">5. 各顧客點購最多次的餐點 (Window Function & CTE + JOIN)</div>
+        <div class="report-description">統計每位顧客點購次數最多的餐點，包含顧客姓名與會員等級，可用於針對個人偏好的精準餐點行銷。</div>
+        <div class="sql-box">WITH CustomerDishQty AS (
+    SELECT c.Customer_ID, c.name AS customer_name, c.member_level, co.Dish_ID, d.name AS dish_name, SUM(co.number) AS total_qty
+    FROM Customers c
+    JOIN Has h ON c.Customer_ID = h.Customer_ID
+    JOIN Contain co ON h.Record_ID = co.Record_ID
+    JOIN Dishes d ON co.Dish_ID = d.Dish_ID
+    GROUP BY c.Customer_ID, c.name, c.member_level, co.Dish_ID, d.name
+),
+RankedDishes AS (
+    SELECT Customer_ID, customer_name, member_level, Dish_ID, dish_name, total_qty,
+           RANK() OVER (PARTITION BY Customer_ID ORDER BY total_qty DESC) AS rk
+    FROM CustomerDishQty
+)
+SELECT Customer_ID, customer_name, member_level, Dish_ID, dish_name, total_qty
+FROM RankedDishes
+WHERE rk = 1;</div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>顧客編號</th>
+                    <th>姓名</th>
+                    <th>會員等級</th>
+                    <th>最常點餐點</th>
+                    <th>總點購數量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql5 = "WITH CustomerDishQty AS (
+                            SELECT c.Customer_ID, c.name AS customer_name, c.member_level, co.Dish_ID, d.name AS dish_name, SUM(co.number) AS total_qty
+                            FROM Customers c
+                            JOIN Has h ON c.Customer_ID = h.Customer_ID
+                            JOIN Contain co ON h.Record_ID = co.Record_ID
+                            JOIN Dishes d ON co.Dish_ID = d.Dish_ID
+                            GROUP BY c.Customer_ID, c.name, c.member_level, co.Dish_ID, d.name
+                        ),
+                        RankedDishes AS (
+                            SELECT Customer_ID, customer_name, member_level, Dish_ID, dish_name, total_qty,
+                                   RANK() OVER (PARTITION BY Customer_ID ORDER BY total_qty DESC) AS rk
+                            FROM CustomerDishQty
+                        )
+                        SELECT Customer_ID, customer_name, member_level, Dish_ID, dish_name, total_qty
+                        FROM RankedDishes
+                        WHERE rk = 1
+                        ORDER BY Customer_ID ASC";
+                $res5 = $conn->query($sql5);
+                if ($res5 && $res5->num_rows > 0) {
+                    while($row = $res5->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td><span class='badge-info'>" . htmlspecialchars($row['Customer_ID']) . "</span></td>";
+                        echo "<td><strong>" . htmlspecialchars($row['customer_name']) . "</strong></td>";
+                        echo "<td>" . htmlspecialchars($row['member_level']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['dish_name']) . " (" . htmlspecialchars($row['Dish_ID']) . ")</td>";
+                        echo "<td>" . htmlspecialchars($row['total_qty']) . " 份</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>目前尚無消費紀錄統計資料</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?php $conn->close(); ?>
